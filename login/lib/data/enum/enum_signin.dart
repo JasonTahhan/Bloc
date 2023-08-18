@@ -1,0 +1,1 @@
+enum SignInStatus {none, error, success, loading}
