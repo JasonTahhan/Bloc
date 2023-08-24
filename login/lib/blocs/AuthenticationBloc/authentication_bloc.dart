@@ -36,6 +36,7 @@ class AuthenticationBloc
     try {
       authenticationRepository.signOutUser();
       emit(state.copywith(
+        currentUser: UserModel.empty(),
         authenticationStatus: AuthenticationStatus.unauthenticated,
       ));
     } catch (e) {

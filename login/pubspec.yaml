@@ -82,6 +82,9 @@ flutter:
     - assets/Group 10961.png
     - assets/alert.svg
     - assets/img.jpg
+    - assets/plus.svg
+    - assets/minus.svg
+
 
   fonts:
     - family: MontserratRegular

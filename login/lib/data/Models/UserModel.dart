@@ -13,6 +13,14 @@ class UserModel {
     this.isLoggedIn = false, 
 
   });
+ static UserModel empty() {
+    return UserModel(
+      userId: "",
+      firstName: "",
+      lastName: "",
+      email: "",
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {

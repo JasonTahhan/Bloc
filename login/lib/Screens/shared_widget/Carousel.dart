@@ -23,20 +23,6 @@ class HomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Space Carousel'),
       ),
-      body: Center(
-        child: Carousel(
-          spaceImages: [
-            'https://example.com/image1.jpg',
-            'https://example.com/image2.jpg',
-            'https://example.com/image3.jpg',
-          ],
-          propertyName: 'Luxury Condo',
-          spaceTitle: 'Modern Apartment',
-          spaceDescription: 'This is a beautiful modern apartment...',
-          spaceRating: 4.5,
-          spacePrice: 79,
-        ),
-      ),
     );
   }
 }
@@ -76,9 +62,8 @@ class Carousel extends StatelessWidget {
                 options: CarouselOptions(
                   height: 200.0,
                   viewportFraction: 1,
-                  aspectRatio: 13/9,
+                  aspectRatio: 13 / 9,
                 ),
-                
                 items: spaceImages.map((imageUrl) {
                   return Builder(
                     builder: (BuildContext context) {
@@ -161,9 +146,7 @@ class Carousel extends StatelessWidget {
                     SizedBox(width: 8.0),
                     PriceButton(
                       spacePrice: spacePrice,
-                      onPressed: () {
-                        
-                      },
+                      onPressed: () {},
                     ),
                   ],
                 ),

@@ -1,4 +1,3 @@
-
 import 'package:bloc/bloc.dart';
 import 'package:login/blocs/PropertyBloc/property_event.dart';
 import 'package:login/blocs/PropertyBloc/property_state.dart';

@@ -10,8 +10,9 @@ import 'package:login/blocs/PropertyBloc/property_state.dart';
 import '../../Navigation/Navigator.dart';
 import '../../data/Models/PropertyModel.dart';
 import '../../data/Models/SpaceModel.dart';
+import '../../data/enum/enum_authentication.dart';
 import '../shared_widget/Carousel.dart';
-
+import '../shared_widget/ModalSheet.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -45,8 +46,8 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
                 context.read<AuthenticationBloc>().add(Signout());
+                NavigationService.pushReplacement('/home');
               },
               child: Text('Logout'),
             ),
@@ -56,55 +57,57 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: Drawer(
         child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
           builder: (context, state) {
-         
-    String? firstName = state.currentUser.firstName;
-    String? lastName = state.currentUser.lastName;
+            String? firstName = state.currentUser.firstName;
+            String? lastName = state.currentUser.lastName;
             return ListView(
-      padding: EdgeInsets.zero,
-      children: <Widget>[
-        DrawerHeader(
-          decoration: BoxDecoration(
-            color: Color(0xFF3C4955),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'My Account',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 24,
-                ),
-              ),
-              if (firstName != null && lastName != null)
-                Text(
-                  'Hello, $firstName $lastName',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 13,
+              padding: EdgeInsets.zero,
+              children: <Widget>[
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Color(0xFF3C4955),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'My Account',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                        ),
+                      ),
+                      Text(
+                        'Hello, $firstName $lastName',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-            ],
-          ),
-        ),
                 ListTile(
-                  leading: Icon(Icons.person),
-                  title: Text('Profile'),
-                  onTap: () {
-                  },
-                  enabled: !state.currentUser.isEmpty()
-                ),
+                    leading: Icon(Icons.person),
+                    title: Text('Profile'),
+                    onTap: () {},
+                    enabled: !state.currentUser.isEmpty()),
                 ListTile(
                   leading: Icon(Icons.login),
-                  title: Text(!state.currentUser.isEmpty() ? 'Logout' : 'Login'),
+                  title: Text(state.authenticationStatus ==
+                          AuthenticationStatus.authenticated
+                      ? 'Logout'
+                      : 'Login'),
                   onTap: () {
-                    if (!state.currentUser.isEmpty()) {
+                    if (state.authenticationStatus ==
+                        AuthenticationStatus.authenticated) {
                       _showLogoutConfirmationDialog();
                     } else {
                       NavigationService.pushReplacement('/SignIn');
@@ -279,54 +282,61 @@ class _HomePageState extends State<HomePage> {
                         ),
                         SizedBox(width: 5),
                         Expanded(
-                          child: Container(
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              border: Border.all(
-                                color: Color.fromRGBO(178, 187, 202, 1),
-                                width: 1,
+                          child: GestureDetector(
+                            onTap: () {
+                              ModalSheet.openModalBottomSheet(context);
+                            },
+                            child: Container(
+                              height: 40,
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                border: Border.all(
+                                  color: Color.fromRGBO(178, 187, 202, 1),
+                                  width: 1,
+                                ),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: Row(
-                              children: [
-                                SizedBox(width: 8),
-                                Expanded(
-                                  child: DropdownButton<String>(
-                                    value: null,
-                                    items: [],
-                                    icon: SvgPicture.asset(
-                                      'assets/drop.svg',
-                                      color: Color(0xFF3C4955),
-                                      width: 20,
-                                    ),
-                                    onChanged: (value) {},
-                                    hint: Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          2.0, 0, 4, 0),
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            Icons.person_add_outlined,
-                                            color: Color(0xFF3C4955),
-                                            size: 20,
-                                          ),
-                                          SizedBox(width: 8),
-                                          Text(
-                                            'Guests & Rooms',
-                                            style: TextStyle(
+                              child: Row(
+                                children: [
+                                  SizedBox(width: 8),
+                                  Expanded(
+                                    child: DropdownButton<String>(
+                                      value: null,
+                                      items: [],
+                                      icon: SvgPicture.asset(
+                                        'assets/drop.svg',
+                                        color: Color(0xFF3C4955),
+                                        width: 20,
+                                      ),
+                                      onChanged: (value) {
+                                        ModalSheet.openModalBottomSheet(context);
+                                      },
+                                      hint: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            2.0, 0, 4, 0),
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              Icons.person_add_outlined,
                                               color: Color(0xFF3C4955),
-                                              fontSize: 14.0,
-                                              fontFamily: 'Montserrat',
+                                              size: 20,
                                             ),
-                                          ),
-                                        ],
+                                            SizedBox(width: 8),
+                                            Text(
+                                              'Guests & Rooms',
+                                              style: TextStyle(
+                                                color: Color(0xFF3C4955),
+                                                fontSize: 14.0,
+                                                fontFamily: 'Montserrat',
+                                              ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -339,11 +349,9 @@ class _HomePageState extends State<HomePage> {
           },
         ),
       ),
-            body: BlocBuilder<PropertyBloc, PropertyState>(
-              
+      body: BlocBuilder<PropertyBloc, PropertyState>(
         builder: (context, state) {
-          PropertyModel? selectedProperty =
-              state.selectedProperty;
+          PropertyModel? selectedProperty = state.selectedProperty;
           if (selectedProperty == null) {
             return Center(child: Text('No property selected'));
           }

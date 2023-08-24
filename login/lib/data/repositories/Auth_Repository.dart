@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:login/Navigation/Navigator.dart';
 import 'package:login/data/Models/UserModel.dart';
 
 class AuthenticationRepository {
     
-Future<void> AddToFirestore({
+Future<bool> AddToFirestore({
     required String email,
     required String password,
     required String firstName,
@@ -28,8 +29,10 @@ Future<void> AddToFirestore({
             .doc(user.uid)
             .set(userModel.toMap());
       }
+      return true;
       
     } catch (e) {
+      return false;
       print('Error adding to firestore');
     }
   }
@@ -50,7 +53,7 @@ Future<void> AddToFirestore({
     }
   }
 
-  Future<void> login({
+  Future<bool> login({
     required String email,
     required String password,
   }) async {
@@ -59,9 +62,11 @@ Future<void> AddToFirestore({
         email: email,
         password: password,
       );
+      NavigationService.push('/home');
+return true;
     } catch (e) {
       print('Error during login: $e');
-      throw e; 
+      return false;
     }
   }
 

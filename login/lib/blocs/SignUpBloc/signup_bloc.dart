@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:login/data/repositories/Auth_Repository.dart';
+import '../../data/enum/enum_signup.dart';
 import 'signup_event.dart';
 import 'signup_state.dart';
 
 class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
-  SignUpBloc() : super(SignUpState(firstName: 'null', lastName: 'null', email: 'null', password: 'null')) {
+  SignUpBloc() : super(SignUpState(firstName: 'null', lastName: 'null', email: 'null', password: 'null',signUpStatus: SignUpStatus.none)) {
     on<UpdateFirstNameRequested>((event, emit) {
       emit(state.copyWith(firstName: event.newFirstName));
     });
@@ -22,12 +23,18 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     });
 
     on<SignUp>((event, emit) async {
-      await AuthenticationRepository().AddToFirestore(
+     bool isValid=  await AuthenticationRepository().AddToFirestore(
         email: state.email,
         password: state.password,
         firstName: state.firstName,
         lastName: state.lastName,
       );
-    });
-  }
-}
+      if(isValid){
+        emit(state.copyWith(signUpStatus: SignUpStatus.success));
+      }
+      if(!isValid){
+        emit(state.copyWith(signUpStatus: SignUpStatus.error));
+      }
+        });
+        }
+      }

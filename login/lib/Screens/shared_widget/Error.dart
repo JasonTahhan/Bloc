@@ -14,7 +14,7 @@ class ErrorSnackbar {
           child: Row(
             children: [
               SvgPicture.asset(
-                'assets/alert.svg', 
+                'assets/alert.svg',
                 color: Color(0xFFAE2D3C),
                 width: 24,
                 height: 24,
@@ -34,10 +34,13 @@ class ErrorSnackbar {
           ),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0, 
-        behavior: SnackBarBehavior.floating, 
-       margin: EdgeInsets.only(
-          bottom:537 ,right: 5,left: 5,),
+        elevation: 0,
+        behavior: SnackBarBehavior.floating,
+        margin: EdgeInsets.only(
+          bottom: 537 - MediaQuery.of(context).viewInsets.bottom,
+          right: 5,
+          left: 5,
+        ),
         duration: Duration(seconds: 3),
       ),
     );
